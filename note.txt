@@ -1,0 +1,7 @@
+nest g controller [filename]
+//用来开新的controller.ts
+
+nest g module [filename]
+//用来开新的module.ts
+
+pnpm install --save-dev @types/express
