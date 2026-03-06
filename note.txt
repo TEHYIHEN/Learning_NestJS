@@ -5,3 +5,9 @@ nest g module [filename]
 //用来开新的module.ts
 
 pnpm install --save-dev @types/express
+
+pnpm install --save class-validator class-transformer
+//class-validator用来检查数据与格式对不对
+//class-transformer 是用来把数据变成想要的type
+
+pnpm add zod
