@@ -1,9 +1,11 @@
-import { Body, Controller, Get, HttpCode, Param, ParseBoolPipe, ParseIntPipe, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Headers, HttpCode, Param, ParseBoolPipe, ParseIntPipe, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreatePropertyDto } from './dto/createProperty.dto';
 import { IdParamDto } from './dto/idParam.dto';
 import { ParseIdPipe } from './custompipes/parseIdppipe';
 import { ZodValidationPipe } from './custompipes/zodValidationPipe';
 import { createPropertySchema, type CreatePropertyZodDto } from './dto/createPropertyZod.dto';
+import { HeadersDto } from './dto/headers.dto';
+import { RequestHeader } from './custompipes/request-header';
 
 @Controller('property')
 export class PropertyController {
@@ -131,21 +133,39 @@ export class PropertyController {
 
     // }
 
-    @Patch(":id")
-    @UsePipes(new ValidationPipe({
+    // @Patch(":id")
+    // @UsePipes(new ValidationPipe({
 
-        whitelist:true,
-        transform:true,
+    //     whitelist:true,
+    //     transform:true,
         
-    }))
-    update(
-        @Param("id", ParseIdPipe) id,
-        @Body()
-        body: CreatePropertyDto
+    // }))
+    // update(
+    //     @Param("id", ParseIdPipe) id,
+    //     @Body()
+    //     body: CreatePropertyDto
 
+    // ){
+    //     console.log(typeof id)
+    //     return body;
+    // }
+
+    @Patch(":id")
+    update(
+        @Param("id", ParseIdPipe) id: number,
+        @Body()
+        body: CreatePropertyDto,
+        /*
+             @Headers 可以查看访问者的信息，获取 HTTP 请求头（Request Headers）中的数据
+             例如:
+             user-agent  浏览器 / 设备信息
+             authorization 登录 token
+             accept-language 用户语言
+        */
+        //@Headers("host") header: HeadersDto, 
+        @RequestHeader(new ValidationPipe({whitelist:true, transform:true, validateCustomDecorators:true})) header: HeadersDto,
     ){
-        console.log(typeof id)
-        return body;
+        return header;
     }
 
 
