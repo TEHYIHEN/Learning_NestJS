@@ -6,13 +6,22 @@ import { ZodValidationPipe } from './custompipes/zodValidationPipe';
 import { createPropertySchema, type CreatePropertyZodDto } from './dto/createPropertyZod.dto';
 import { HeadersDto } from './dto/headers.dto';
 import { RequestHeader } from './custompipes/request-header';
+import { PropertyService } from './property.service';
 
 @Controller('property')
 export class PropertyController {
+    // propertyService: PropertyService;
+    // constructor(){
+    //     this.propertyService = new PropertyService();
+    // }
+    constructor(private propertyService: PropertyService) //官方认证
+    {}
+
 
     @Get()
     findAll(){
-        return "All Properties";
+        //return "All Properties";
+        this.propertyService.findAll();
     }
 
     @Get(":id")
@@ -28,8 +37,10 @@ export class PropertyController {
         @Query("sort", ParseBoolPipe) sort
     ){ 
 
-        console.log(typeof id); //test type in console
-        console.log(typeof sort);
+        // console.log(typeof id); //test type in console
+        // console.log(typeof sort);
+        return this.propertyService.findOne();
+
 
         //Mock Database
         // if(id === "1"){
@@ -94,7 +105,9 @@ export class PropertyController {
     @UsePipes(new ValidationPipe({whitelist: true }))
     create(@Body() body: CreatePropertyDto){
 
-        return body;
+        //return body;
+        return this.propertyService.create();
+
     }
 
 
@@ -151,6 +164,12 @@ export class PropertyController {
     // }
 
     @Patch(":id")
+    @UsePipes(new ValidationPipe({
+
+        whitelist:true,
+        transform:true,
+        
+    }))
     update(
         @Param("id", ParseIdPipe) id: number,
         @Body()
@@ -163,9 +182,12 @@ export class PropertyController {
              accept-language 用户语言
         */
         //@Headers("host") header: HeadersDto, 
-        @RequestHeader(new ValidationPipe({whitelist:true, transform:true, validateCustomDecorators:true})) header: HeadersDto,
+        
+        @RequestHeader(HeadersDto) header: HeadersDto,
+        
     ){
-        return header;
+        //return header;
+        return this.propertyService.update();
     }
 
 

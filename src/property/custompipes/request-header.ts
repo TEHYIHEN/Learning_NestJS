@@ -15,6 +15,12 @@ export const RequestHeader = createParamDecorator(
             excludeExtraneousValues:true
         })
 
+        // 🕵️ 关键调试点 1：看看 dto 到底是不是 HeadersDto 的实例
+    console.log('Is instance of DTO?', dto instanceof targetDto);
+    
+    // 🕵️ 关键调试点 2：看看转换后里面有什么内容
+    console.log('Converted DTO content:', JSON.stringify(dto));
+
         try {
              await validateOrReject(dto);
 

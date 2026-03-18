@@ -11,3 +11,8 @@ pnpm install --save class-validator class-transformer
 //class-transformer 是用来把数据变成想要的type
 
 pnpm add zod
+
+nest g s property --no-spec
+g=generate
+s= service
+//generate property.service.ts without .spec.ts
