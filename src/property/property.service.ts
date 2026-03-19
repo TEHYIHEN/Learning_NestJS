@@ -8,3 +8,4 @@ export class PropertyService {
     async create(){}
     async update(){}
 }
+

@@ -16,3 +16,7 @@ nest g s property --no-spec
 g=generate
 s= service
 //generate property.service.ts without .spec.ts
+
+pnpm install --save @nestjs/typeorm typeorm mysql2
+//TypeORM intergartion
+//如果不想用mysql2, 可以用 pg (postgreSQL)
