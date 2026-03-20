@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Headers, HttpCode, Param, ParseBoolPipe, ParseIntPipe, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, HttpCode, Param, ParseBoolPipe, ParseIntPipe, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreatePropertyDto } from './dto/createProperty.dto';
 import { IdParamDto } from './dto/idParam.dto';
 import { ParseIdPipe } from './custompipes/parseIdppipe';
@@ -7,6 +7,7 @@ import { createPropertySchema, type CreatePropertyZodDto } from './dto/createPro
 import { HeadersDto } from './dto/headers.dto';
 import { RequestHeader } from './custompipes/request-header';
 import { PropertyService } from './property.service';
+import { UpdatePropertyDto } from './dto/updateProperty.dto';
 
 @Controller('property')
 export class PropertyController {
@@ -34,12 +35,12 @@ export class PropertyController {
     */
     findOne(
         @Param("id", ParseIntPipe) id: number,
-        @Query("sort", ParseBoolPipe) sort
+        //@Query("sort", ParseBoolPipe) sort
     ){ 
 
         // console.log(typeof id); //test type in console
         // console.log(typeof sort);
-        return this.propertyService.findOne();
+        return this.propertyService.findOne(id);
 
 
         //Mock Database
@@ -103,10 +104,10 @@ export class PropertyController {
 }
     */
     @UsePipes(new ValidationPipe({whitelist: true }))
-    create(@Body() body: CreatePropertyDto){
+    create(@Body() dto: CreatePropertyDto){
 
         //return body;
-        return this.propertyService.create();
+        return this.propertyService.create(dto);
 
     }
 
@@ -173,7 +174,7 @@ export class PropertyController {
     update(
         @Param("id", ParseIdPipe) id: number,
         @Body()
-        body: CreatePropertyDto,
+        body: UpdatePropertyDto,
         /*
              @Headers 可以查看访问者的信息，获取 HTTP 请求头（Request Headers）中的数据
              例如:
@@ -187,7 +188,7 @@ export class PropertyController {
         
     ){
         //return header;
-        return this.propertyService.update();
+        return this.propertyService.update(id, body);
     }
 
 
@@ -199,6 +200,10 @@ export class PropertyController {
         return body;
     }
 
+    @Delete(":id")
+    delete(@Param("id", ParseIntPipe) id: number){
+        return this.propertyService.delete(id);
+    }
 
 }
 
