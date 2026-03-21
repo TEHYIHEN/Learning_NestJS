@@ -34,6 +34,8 @@ export class PropertyService {
         return await this.propertyRepo.update({id}, dto);
     }
 
-    async delete(){}
+    async delete(id:number){
+        return await this.propertyRepo.delete({id});
+    }
 }
 
