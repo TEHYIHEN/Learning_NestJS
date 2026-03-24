@@ -1,5 +1,5 @@
 import { Faker } from "@faker-js/faker";
-import { PropertyFeature } from "src/entities/propertyFeature.entity";
+import { PropertyFeature } from "../entities/propertyFeature.entity";
 import {setSeederFactory} from "typeorm-extension";
 
 

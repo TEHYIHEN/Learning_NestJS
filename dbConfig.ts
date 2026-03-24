@@ -23,7 +23,7 @@ import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 //最后我选择用这个，因为PostgresConnectionOptions 放不了autoLoadEntities
 export const pgConfig = (configService: ConfigService): TypeOrmModuleOptions => ({
 
-    url: configService.get<string>('DATABASE_URL'),
+    url: configService.get<string>('DATABASE_URL'), // .env 
     type: 'postgres',
     port: 5432,  //5432 is postgres default, 3306 is MYSQL
     

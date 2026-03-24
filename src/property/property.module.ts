@@ -3,8 +3,8 @@ import { PropertyController } from './property.controller';
 import { APP_PIPE } from '@nestjs/core';
 import { PropertyService } from './property.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Property } from 'src/entities/property.entity';
-import { User } from 'src/entities/user.entity';
+import { Property } from '../entities/property.entity';
+import { User } from '../entities/user.entity';
 
 @Module({
 
