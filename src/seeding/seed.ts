@@ -5,10 +5,12 @@ import { UserFactory } from "./user.factory";
 import { PropertyFeatureFactory } from "./propertyFeature.factory";
 import { MainSeeder } from "./main.seeder";
 import "dotenv/config"
+//import dbConfig from "src/config/db.config";
 
 
 const options: DataSourceOptions & SeederOptions ={
     //...pgConfig   //cant use here because not the same type, have to copy paste
+    //...dbConfig(), //💩
     type: 'postgres',
     url: process.env.DATABASE_URL,
     port: 5432,

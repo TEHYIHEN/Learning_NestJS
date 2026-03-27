@@ -1,4 +1,4 @@
-import { ConfigService } from "@nestjs/config";
+import { ConfigService, registerAs } from "@nestjs/config";
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 //import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions.js";
 
@@ -20,10 +20,31 @@ import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 
 
 // all of this link to app.module.ts
-//最后我选择用这个，因为PostgresConnectionOptions 放不了autoLoadEntities
-export const pgConfig = (configService: ConfigService): TypeOrmModuleOptions => ({
+//本来我选择用这个，因为PostgresConnectionOptions 放不了autoLoadEntities
+//最后选了下一个
+// export const pgConfig = (configService: ConfigService): TypeOrmModuleOptions => ({//🐒
 
-    url: configService.get<string>('DATABASE_URL'), // .env 
+//     url: configService.get<string>('DATABASE_URL'), // .env 
+//     type: 'postgres',
+//     port: 5432,  //5432 is postgres default, 3306 is MYSQL
+    
+//     //autofind @Entity
+//     autoLoadEntities: true, 
+
+//     entities: [__dirname + '/**/*.entity{.ts,.js}'], // 让它自动找实体,也就是@Entity,但注意filename一定得有.entity.ts, 写错一个字都会报错。避免这问题的方案是autoLoadEntities
+//     synchronize: true, //only open in development, change to "false" in Production📌
+//     ssl: {
+//       rejectUnauthorized: false, 
+//     }, 
+    
+// })
+
+
+//最后我用了这个，我会用🐒标记过去的代码， 只是在app.module.ts
+export default registerAs("database", (): TypeOrmModuleOptions => ({
+    
+    //url: configService.get<string>('DATABASE_URL'),
+    url: process.env.DATABASE_URL, // 在 load 模式下，这里可以直接用 process.env
     type: 'postgres',
     port: 5432,  //5432 is postgres default, 3306 is MYSQL
     
@@ -36,19 +57,7 @@ export const pgConfig = (configService: ConfigService): TypeOrmModuleOptions => 
       rejectUnauthorized: false, 
     }, 
     
-})
+}))
 
+//console.log(process.env.url); //result was undefined and it prove read .env file 1st.
 
-
-// export const pgConfig = (configService: ConfigService): PostgresConnectionOptions => ({
-
-//     url: configService.get<string>('DATABASE_URL'),
-//     type: 'postgres',
-//     port:5432,  //5432 is postgres default, 3306 is MYSQL
-//     entities:[__dirname + '/**/*.entity{.ts,.js}'], // 让它自动找实体,也就是@Entity,但注意filename一定得有.entity.ts, 写错一个字都会报错。避免这问题的方案是autoLoadEntities
-//     synchronize:true, //only open in development, change to "false" in Production📌
-//     ssl: {
-//       rejectUnauthorized: false, 
-//     }, 
-    
-// })

@@ -1,13 +1,19 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
+import { ConfigService } from '@nestjs/config';
 
-@Controller()                   // --> url就是  / 而已
+@Controller()                   // --> url就是  / 而已 ,refer at btm.
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private configService: ConfigService,
+  ) {}
 
   @Get()                    
   getHello(): string {
-    return this.appService.getHello();
+    //return this.appService.getHello(); //result = "Hello Word"
+    //💩return this.configService.get('dbconfig.dev.type'); //when search localhost:3000/ using GET method, result will be postgre
+    return this.configService.get<string>('database.port') ?? "Please check the configService in controller";  //result will be 5432
   }
 }
 
