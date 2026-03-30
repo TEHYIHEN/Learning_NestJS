@@ -10,6 +10,7 @@ export const UserFactory = setSeederFactory(User, (faker:Faker)=> {
     user.lastName = faker.person.lastName();
     user.email = faker.internet.email();
     user.avatarUrl = faker.image.avatar();
+    user.password = "Abc@12345";
     
     return user;
 

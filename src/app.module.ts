@@ -5,6 +5,7 @@ import { PropertyModule } from './property/property.module';
 import {TypeOrmModule, TypeOrmModuleOptions} from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 import dbConfig from 'dbConfig';
 //import dbConfigProduction from './config/db.config.production';
 //import dbConfig from './config/db.config';
@@ -43,7 +44,8 @@ import dbConfig from 'dbConfig';
        */
      }),
      PropertyModule,
-     UserModule,  // 👆nest g res user 后自动来了这里
+     UserModule,
+     AuthModule,  // 👆nest g res user 后自动来了这里
     // TypeOrmModule.forRootAsync({//💩
     //   useFactory: process.evn.NODE_ENV === "production" ? dbConfigProduction : dbConfig , // for safe enviroment
     // }),

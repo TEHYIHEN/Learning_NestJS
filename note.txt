@@ -4,6 +4,17 @@ nest g controller [filename]
 nest g module [filename]
 //用来开新的module.ts
 
+nest g res [filename]
+//直接来一个CRUD generator
+
+nest g res auth --no-spec
+//Authecation file created , 
+//Choose N when asking generate CRUD entry point
+
+nest g gu
+//create guard.ts
+
+
 pnpm install --save-dev @types/express
 
 pnpm install --save class-validator class-transformer
@@ -20,3 +31,13 @@ s= service
 pnpm install --save @nestjs/typeorm typeorm mysql2
 //TypeORM intergartion
 //如果不想用mysql2, 可以用 pg (postgreSQL)
+
+pnpm add @nestjs/swagger
+
+pnpm add bcrypt
+pnpm add -D @types/bcrypt
+//这两个用来convert password to irreversible password
+
+pnpm add @nestjs/passport passport passport-local
+pnpm add -D @types/passport-local
+// Authentication

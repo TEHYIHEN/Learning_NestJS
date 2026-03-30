@@ -30,7 +30,7 @@ export class User{
     Do not store password direct in database
     Use Hashing, to transform the password to an irreversible STRING of characters
     */
-    @Column()
+    @Column({type:"varchar" , length: 255 , default:"temporary_password"})
     password!:string;
 
     @BeforeInsert() //在save进database之前的意思

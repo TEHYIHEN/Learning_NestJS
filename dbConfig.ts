@@ -56,6 +56,7 @@ export default registerAs("database", (): TypeOrmModuleOptions => ({
     ssl: {
       rejectUnauthorized: false, 
     }, 
+    //dropSchema: true  //📌添加这一行，启动时会清空所有表里的data   !!!💀注意，用了后换掉false或 "//"掉
     
 }))
 
