@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import dbConfig from 'dbConfig';
+import jwtConfig from './auth/config/jwt.config';
 //import dbConfigProduction from './config/db.config.production';
 //import dbConfig from './config/db.config';
 

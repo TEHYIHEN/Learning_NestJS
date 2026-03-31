@@ -1,6 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcrypt';
 import { UserService } from 'src/user/user.service';
+import { AuthJwtPayload } from './types/auth.jwtPayload';
 
 
 /*
@@ -10,7 +12,8 @@ Use to confirm/validate the email and password correct
 export class AuthService {
 
     constructor(
-        private userService: UserService
+        private userService: UserService,
+        private jwtService: JwtService
     ){}
 
     async validateUser(
@@ -31,6 +34,12 @@ export class AuthService {
         
     }
 
-    
+    login(userId:number){
+
+        const payload: AuthJwtPayload = {
+            sub: userId
+        }
+        return this.jwtService.sign(payload)
+    }
 }
 
