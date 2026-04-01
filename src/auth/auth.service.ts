@@ -1,8 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcrypt';
 import { UserService } from 'src/user/user.service';
 import { AuthJwtPayload } from './types/auth.jwtPayload';
+import refreshJwtConfig from './config/refresh-jwt.config';
+import type { ConfigType } from '@nestjs/config';
+import { id } from 'zod/v4/locales';
 
 
 /*
@@ -13,7 +16,10 @@ export class AuthService {
 
     constructor(
         private userService: UserService,
-        private jwtService: JwtService
+        private jwtService: JwtService,
+
+        @Inject(refreshJwtConfig.KEY)
+        private refreshTokenConfig: ConfigType<typeof refreshJwtConfig>
     ){}
 
     async validateUser(
@@ -39,7 +45,29 @@ export class AuthService {
         const payload: AuthJwtPayload = {
             sub: userId
         }
-        return this.jwtService.sign(payload)
+        //return this.jwtService.sign(payload)
+        const token = this.jwtService.sign(payload);  //module 那边默认了， 所以不像下面代码放(payload, this.refreshTokenConfig)
+        const refreshtoken = this.jwtService.sign(payload, this.refreshTokenConfig);
+
+        return {
+            id: userId,
+            token,
+            refreshtoken
+        }
+    }
+
+    refreshToken(userId:number){
+        
+        const payload: AuthJwtPayload = {
+            sub: userId
+        }
+        
+        const token = this.jwtService.sign(payload);
+        return {
+            id: userId,
+            token
+        }
+
     }
 }
 

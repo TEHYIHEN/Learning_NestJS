@@ -4,22 +4,23 @@ import { PassportStrategy } from "@nestjs/passport";
 import { Strategy, ExtractJwt } from "passport-jwt";
 import jwtConfig from "../config/jwt.config";
 import { AuthJwtPayload } from "../types/auth.jwtPayload";
+import refreshJwtConfig from "../config/refresh-jwt.config";
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy){
+export class RefreshJwtStrategy extends PassportStrategy(Strategy, "refresh-jwt"){
 
     constructor(
-        @Inject(jwtConfig.KEY)
-        //put this.jwtConfiguration in validate, then it will light up.
+        @Inject(refreshJwtConfig.KEY)
+        //put this.refreshJwtConfiguration in validate, then it will light up.
         //dont worry, it wont affect the result
-         private jwtConfiguration: ConfigType<typeof jwtConfig>
+         private refreshJwtConfiguration: ConfigType<typeof refreshJwtConfig>
         
     
     ){
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             //secretOrKey: process.env.JWT_SECRET as string, 
-            secretOrKey: jwtConfiguration.secret as string,
+            secretOrKey: refreshJwtConfiguration.secret as string,
             ignoreExpiration: false,
         })
     }
