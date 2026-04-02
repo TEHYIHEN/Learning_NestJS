@@ -33,6 +33,9 @@ export class User{
     @Column({type:"varchar" , length: 255 , default:"temporary_password"})
     password!:string;
 
+    @Column()
+    hashedRefreshToken!:string;
+
     @BeforeInsert() //在save进database之前的意思
     async hashPassword(){
         this.password = await bcrypt.hash(this.password,10) // saltOrRounds choose 10 is better, more larger the value more laggy
