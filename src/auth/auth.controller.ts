@@ -3,6 +3,14 @@ import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
+import { Request as ExpressRequest} from 'express'; //have 2 same Request, so i rename it as ExpressRequest
+
+interface RequestWithUser extends ExpressRequest {
+  user:{
+    id:number
+  }
+}
 
 @Controller('auth')
 export class AuthController {
@@ -16,20 +24,27 @@ export class AuthController {
   */
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req: any) {
+  async login(@Request() req: RequestWithUser) { //@Request is same meaning as @Req
 
     ///const token = this.authService.login(req.user.id);
 
     //return req.user;
     ///return {id: req.user.id, token}
-    return this.authService.login(req.user.id);
+    return await this.authService.login(req.user.id);
   }
   
   //
   @UseGuards(RefreshAuthGuard)
   @Post("refresh")
-  refreshToken(@Req() req:any) {
-    return this.authService.refreshToken(req.user.id);
+  async refreshToken(@Req() req: RequestWithUser) {
+    return await this.authService.refreshToken(req.user.id);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post("signout")
+  async signOut(@Req() req: RequestWithUser){
+    return await this.authService.signOut(req.user.id);
+  }
+
 
 }

@@ -13,7 +13,7 @@ export class UserService {
     private UserRepo: Repository<User>,
   ){}
 
-  async updateHashedRefreshToken(userId: number, hashedRefreshToken: string) {
+  async updateHashedRefreshToken(userId: number, hashedRefreshToken: string | null) {
 
     return await this.UserRepo.update(userId, {
       hashedRefreshToken

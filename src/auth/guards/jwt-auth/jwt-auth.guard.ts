@@ -12,4 +12,8 @@ import { Observable } from 'rxjs';
 // }
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {}
+export class JwtAuthGuard extends AuthGuard('jwt') {
+
+    //extra guard service can put here
+    //example: do the user isBanned?
+}

@@ -50,6 +50,7 @@ export class AuthService {
         // const token = this.jwtService.sign(payload);  //module 那边默认了， 所以不像下面代码放(payload, this.refreshTokenConfig)
         // const refreshtoken = this.jwtService.sign(payload, this.refreshTokenConfig);
 
+        //有个generateTokens后更新以下代码
         const {accessToken, refreshToken} = await this.generateTokens(userId);
         const hashedRefreshToken = await argon2.hash(refreshToken);
         await this.userService.updateHashedRefreshToken(userId, hashedRefreshToken);
@@ -80,22 +81,95 @@ export class AuthService {
         }
     }
 
-    refreshToken(userId:number){
+    // refreshToken(userId:number){
         
-        const payload: AuthJwtPayload = {
-            sub: userId
-        }
+    //     const payload: AuthJwtPayload = {
+    //         sub: userId
+    //     }
         
-        const token = this.jwtService.sign(payload);
+    //     const token = this.jwtService.sign(payload);
+    //     return {
+    //         id: userId,
+    //         token
+    //     }
+
+    // }
+
+    //refresh token rotation
+    //same code as login function but this function more secure and guarded.
+    async refreshToken(userId:number){
+
+        const {accessToken, refreshToken} = await this.generateTokens(userId);
+        const hashedRefreshToken = await argon2.hash(refreshToken);
+        await this.userService.updateHashedRefreshToken(userId, hashedRefreshToken);
+        
+
         return {
             id: userId,
-            token
+            accessToken,
+            refreshToken
         }
 
     }
 
     async validateRefreshToken(userId:number, refreshToken:string){
-        const user = this.userService.findOne(userId);
+
+        //查找数据库是否有用户
+        const user = await this.userService.findOne(userId);
+
+        if(!user || !user.hashedRefreshToken) {
+            throw new UnauthorizedException("Invalid Refresh Token");
+        }
+
+        const refreshTokenMatches = await argon2.verify(
+            user.hashedRefreshToken,
+            refreshToken
+        );
+
+        if(!refreshTokenMatches) {throw new UnauthorizedException("Invalid Refresh Token")};
+
+        return {id: userId}
+
     }
+    // clear the refresh token after signOut
+    async signOut(userId: number){
+
+        await this.userService.updateHashedRefreshToken(userId, null);
+
+    }
+
 }
+
+
+    //if oneday login with different device, we have open entitiy add a deviceID to get diffrent hash token
+
+    // async login(userId: number, deviceId: string) {
+    //     const { accessToken, refreshToken } = await this.generateTokens(userId);
+    //     const hashedRefreshToken = await argon2.hash(refreshToken);
+
+    //     // 🏃 这里变成“新增”记录，而不是“覆盖”
+    //     await this.sessionRepo.save({
+    //         user: { id: userId },
+    //         hashedRefreshToken,
+    //         deviceId
+    //      });
+
+    // return { accessToken, refreshToken };
+    // }
+
+//     @Entity()
+//     export class Session {
+//         @PrimaryGeneratedColumn()
+//         id: number;
+
+//         @Column()
+//         hashedRefreshToken: string;
+
+//         @Column()
+//         deviceId: string; // 用来区分是手机还是电脑
+
+//         @ManyToOne(() => User, (user) => user.sessions)
+//         user: User;
+// }
+
 

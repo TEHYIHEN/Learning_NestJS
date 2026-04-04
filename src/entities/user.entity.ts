@@ -33,8 +33,8 @@ export class User{
     @Column({type:"varchar" , length: 255 , default:"temporary_password"})
     password!:string;
 
-    @Column()
-    hashedRefreshToken!:string;
+    @Column({ nullable: true, type: 'varchar' })
+    hashedRefreshToken?:string | null;
 
     @BeforeInsert() //在save进database之前的意思
     async hashPassword(){
