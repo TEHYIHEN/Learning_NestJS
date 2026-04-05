@@ -29,6 +29,10 @@ export class RolesGuard implements CanActivate {
       context.getClass(),  //2. 再看类（Controller）上的标签
 
     ]);
+    //默认没有设定@Roles的直接放行
+    //allow passthrough without @Roles decorator
+    //example: login function , without the code below, we cannot login.
+    if(!requirendRoles) return true;
 
     const user = context.switchToHttp().getRequest().user;
     //.some method checks if at least one element in an array passes a specific test

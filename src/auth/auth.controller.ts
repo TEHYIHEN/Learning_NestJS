@@ -5,6 +5,7 @@ import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { Request as ExpressRequest} from 'express'; //have 2 same Request, so i rename it as ExpressRequest
+import { Public } from './decorators/public.decorator';
 
 interface RequestWithUser extends ExpressRequest {
   user:{
@@ -16,6 +17,8 @@ interface RequestWithUser extends ExpressRequest {
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+
+  @Public()
   @HttpCode(HttpStatus.OK) //if succes login, would be 200 OK , witout this was default 201 created
   /*
   @UseGuards(AuthGuard("local"))

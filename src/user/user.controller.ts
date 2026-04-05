@@ -42,8 +42,7 @@ export class UserController {
 
 //@SetMetadata("role", [Role.ADMIN]) //put in roles.decoratos.ts
   @Roles(Role.ADMIN) //加了这个，USER就不可以使用
-  @UseGuards(JwtAuthGuard, RolesGuard) //Jwt 在左边先执行
-  //@UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard, RolesGuard) //Jwt 在左边先执行 //why hidden, because put global guard at auth.module.ts
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
