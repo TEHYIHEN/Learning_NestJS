@@ -5,7 +5,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { Role } from 'src/auth/enums/role.enum';
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/roles/roles.guard';
 
+@Roles(Role.USER) //全局默认可以使用
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -39,7 +41,9 @@ export class UserController {
   }
 
 //@SetMetadata("role", [Role.ADMIN]) //put in roles.decoratos.ts
-  @Roles(Role.ADMIN, Role.EDITOR)
+  @Roles(Role.ADMIN) //加了这个，USER就不可以使用
+  @UseGuards(JwtAuthGuard, RolesGuard) //Jwt 在左边先执行
+  //@UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
