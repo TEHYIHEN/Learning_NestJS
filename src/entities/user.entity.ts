@@ -3,6 +3,7 @@ import { Property } from "./property.entity";
 
 import * as bcrypt from 'bcrypt';
 import { IsOptional, Matches, MinLength } from "class-validator";
+import { Role } from "src/auth/enums/role.enum";
 
 
 @Entity()
@@ -46,6 +47,14 @@ export class User{
     properties!:Property[];
 
     @ManyToMany(()=>Property, (property)=> property.likedBy)
-    likedProperties!:Property[]
+    likedProperties!:Property[];
+
+    //role.enum.ts
+    @Column({
+        type:"enum",
+        enum:Role,
+        default:Role.USER
+    })
+    role!:Role;
 
 }
