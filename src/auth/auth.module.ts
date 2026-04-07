@@ -13,6 +13,7 @@ import refreshJwtConfig from './config/refresh-jwt.config';
 import { RefreshJwtStrategy } from './strategies/refresh.strategy';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { RolesGuard } from './guards/roles/roles.guard';
+import googleOauthConfig from './config/google-oauth.config';
 
 
 @Module({
@@ -26,7 +27,8 @@ import { RolesGuard } from './guards/roles/roles.guard';
     // })
     JwtModule.registerAsync(jwtConfig.asProvider()), //default jwt for whole auth
     ConfigModule.forFeature(jwtConfig),
-    ConfigModule.forFeature(refreshJwtConfig)
+    ConfigModule.forFeature(refreshJwtConfig),
+    ConfigModule.forFeature(googleOauthConfig)
   ],
   controllers: [AuthController],
   providers: [
