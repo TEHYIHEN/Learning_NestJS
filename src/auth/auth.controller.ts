@@ -1,4 +1,4 @@
-import { Controller, HttpCode, HttpStatus, Post, Req, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Post, Req, Request, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
@@ -6,6 +6,7 @@ import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { Request as ExpressRequest} from 'express'; //have 2 same Request, so i rename it as ExpressRequest
 import { Public } from './decorators/public.decorator';
+import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
 
 interface RequestWithUser extends ExpressRequest {
   user:{
@@ -18,7 +19,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
 
-  @Public()
+  @Public() //open for public and no need to check JWT token for any authentication, example login.
   @HttpCode(HttpStatus.OK) //if succes login, would be 200 OK , witout this was default 201 created
   /*
   @UseGuards(AuthGuard("local"))
@@ -47,6 +48,20 @@ export class AuthController {
   @Post("signout")
   async signOut(@Req() req: RequestWithUser){
     return await this.authService.signOut(req.user.id);
+  }
+
+  //Register Google strategy in auth.module.ts
+  @Public() //Guard JWT , please dont block me , allow it pass
+  @UseGuards(GoogleAuthGuard) // Guard JWT let it pass, but need to by through this kastam. (check by Guard Google)
+  @Get("google/login")
+  googleLogin(){}
+
+  @Public()
+  @UseGuards(GoogleAuthGuard)
+  @Get("google/callback")
+  async googleCallback(@Req() req: any, @Res() res:any){
+    const response = await this.authService.login(req.user.id);
+    res.redirect(`http://localhost:5173?token=${response.accessToken}`);
   }
 
 

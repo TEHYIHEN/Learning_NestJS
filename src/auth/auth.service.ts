@@ -7,6 +7,7 @@ import refreshJwtConfig from './config/refresh-jwt.config';
 import type { ConfigType } from '@nestjs/config';
 import * as argon2 from 'argon2';
 import { CurrentUser } from './types/current-user';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 
 
@@ -145,6 +146,16 @@ export class AuthService {
         if(!user) throw new UnauthorizedException("User not found!");
         const currentUser:CurrentUser = { id: user.id, role: user.role };
         return currentUser;
+
+    }
+    //validate the user exist in database by email
+    async validateGoogleUser(googleUser:CreateUserDto){
+
+        const user = await this.userService.findByEmail(googleUser.email);
+        //如果有，返回并结束
+        if(user) {return user};
+        //如果没有，帮他注册个账号
+        return await this.userService.create(googleUser);
 
     }
 

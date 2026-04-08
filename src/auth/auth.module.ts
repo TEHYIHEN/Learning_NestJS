@@ -14,6 +14,7 @@ import { RefreshJwtStrategy } from './strategies/refresh.strategy';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { RolesGuard } from './guards/roles/roles.guard';
 import googleOauthConfig from './config/google-oauth.config';
+import { GoogleStrategy } from './strategies/google.strategy';
 
 
 @Module({
@@ -37,6 +38,7 @@ import googleOauthConfig from './config/google-oauth.config';
     LocalStrategy, 
     JwtStrategy, 
     RefreshJwtStrategy,
+    GoogleStrategy,
     //order 1st was JwtAuthGuard , then RolesGuard
     //check identity 1st , then check role authorization
     {
